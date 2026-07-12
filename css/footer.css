@@ -1,0 +1,51 @@
+footer {
+    background-color: white;
+    color: black;
+    width: 100%;
+    padding: 0px 30px 40px 30px;
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    box-sizing: border-box;
+}
+
+/* Icons on the left */
+.footer-icons {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    margin-left: 20px;
+}
+
+footer .small_icon {
+    text-decoration: none;
+    color: rgb(87, 87, 87);
+    font-size: 30px;
+    display: flex;
+    align-items: center;
+}
+
+footer .small_icon:hover {
+    color: black;
+}
+
+/* Text on the right */
+.footer-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-top: 50px;
+    margin-left: 10px;
+}
+
+.footer-text p {
+    font-size: 15px;
+    margin: 2px 0;
+    white-space: normal;
+    margin: 6px;
+}
+
+.footer-text .message {
+    color: rgb(241, 161, 124);
+    font-size: 15px;
+}

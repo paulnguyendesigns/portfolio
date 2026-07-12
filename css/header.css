@@ -11,7 +11,7 @@ body {
 header {
     background-color: #ffffff;
     color: white;
-    padding: 100px 0px;
+    padding: 45px 0px;
     position: sticky;
     width: 100%;
     top: 0;
@@ -73,35 +73,6 @@ nav .left a:hover,
 nav a:hover[id="contact"]{
     text-decoration: underline;
     text-underline-offset: 6px;
-}
-footer {
-    background-color: white;
-    color: black;
-    text-align: left;
-    padding: 40px 30px;
-    position: relative;
-    margin-top: -30px;
-    bottom: 0;
-    max-width: 100%;
-}
-footer .small_icon {
-    text-decoration: none;
-    color: rgb(87, 87, 87);
-    display: inline-block;
-    font-size: 30px;
-    margin: 0 10px;
-    text-align: center;
-}
-footer .small_icon:hover {
-    color: black;
-}
-footer .message {
-    color: rgb(241, 161, 124);
-    display: inline-block;
-    margin: 0 11px;
-    font-size: 15px;
-    position: relative;
-    top: -3px;
 }
 p {
     font-size: 12px;
