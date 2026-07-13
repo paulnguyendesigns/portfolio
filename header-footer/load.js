@@ -4,5 +4,26 @@ async function loadComponent(id, file) {
     document.getElementById(id).innerHTML = html;
 }
 
-loadComponent("header", "./header-footer/header.html");
-loadComponent("footer", "./header-footer/footer.html");
+async function init() {
+    // Load components
+    loadComponent("header", "./header-footer/header.html");
+    await loadComponent("footer", "./header-footer/footer.html");
+
+    // Create observer after footer exists
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add("show");
+            }
+        });
+    }, {
+        threshold: 0.30
+    });
+
+    // Find all hidden elements
+    const hiddenElements = document.querySelectorAll(".hidden");
+
+    hiddenElements.forEach((el) => observer.observe(el));
+}
+
+init();

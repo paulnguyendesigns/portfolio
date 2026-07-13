@@ -15,7 +15,7 @@ body {
 header {
     background-color: #ffffff;
     color: white;
-    padding: 45px 0px;
+    padding: 35px 0px;
     position: sticky;
     width: 100%;
     top: 0;
@@ -40,7 +40,7 @@ header .icon {
     display: none;
 }
 header .logo img {
-    max-height: 180px;
+    max-height: 140px;
     height: auto;
 }
 nav .left {

@@ -21,7 +21,6 @@
             height: auto;
             display: block;
             overflow: hidden;
-            transition: transform 0.3s, box-shadow 0.3s;
             margin: 20px 0px;
         }
         .image img:hover {
@@ -79,6 +78,17 @@
             margin-bottom: -10px;
         }
 
+        .hidden {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 1s ease-out, transform 1s ease-out;
+        }
+
+        .show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
     </style>
 </head>
 <body>
@@ -92,19 +102,19 @@
     <h2>Graphic Design</h2>
     <main>
         <div class="image">
-            <img src="gd/csd1.png" alt="csd1">
-            <img src="gd/unicef_recap.png" alt="unicef_recap">
-            <img src="gd/csd_info.png" alt="csd_info">
+            <img class="hidden" src="gd/csd1.png" alt="csd1">
+            <img class="hidden" src="gd/unicef_recap.png" alt="unicef_recap">
+            <img class="hidden" src="gd/csd_info.png" alt="csd_info">
         </div>
         <div class="image">
-            <img src="gd/unicef_intro.png" alt="unicef_intro">
-            <img src="gd/unicef_winter25.png" alt="unicef_winter25">
-            <img src="gd/mada1.png" alt="mada1">
+            <img class="hidden" src="gd/unicef_intro.png" alt="unicef_intro">
+            <img class="hidden" src="gd/unicef_winter25.png" alt="unicef_winter25">
+            <img class="hidden" src="gd/mada1.png" alt="mada1">
         </div>
         <div class="image">
-            <img src="gd/unicef_bracelet.png" alt="unicef_bracelet">
-            <img src="gd/csd2.png" alt="csd2">
-            <img src="gd/mada2.png" alt="mada2">
+            <img class="hidden" src="gd/unicef_bracelet.png" alt="unicef_bracelet">
+            <img class="hidden" src="gd/csd2.png" alt="csd2">
+            <img class="hidden" src="gd/mada2.png" alt="mada2">
         </div>
     </main>
 
