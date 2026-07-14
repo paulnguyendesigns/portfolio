@@ -49,9 +49,28 @@
             transition: transform 0.3s;
         }
 
+        .current-button {
+            background-color: rgb(207, 103, 83);
+            color: white;
+            font-size: 30px;
+            font-weight: 600;
+            font-family: 'Dosis', sans-serif;
+            border: none;
+            border-radius: 50px;
+            padding: 20px 45px;
+            cursor: pointer;
+            transition: transform 0.3s;   
+        }
+
         .custom-button:hover {
             transform: rotate(-2deg);
             background-color: rgb(240, 196, 124);
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+
+        .current-button:hover {
+            transform: rotate(-2deg);
+            background-color: rgb(207, 103, 83);
             transition: transform 0.3s ease, background-color 0.3s ease;
         }
         h1 {
@@ -63,17 +82,6 @@
             font-size: 60px;
             margin-top: -5px;
         }
-        h2 {
-            color: rgb(241, 161, 124);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-family: 'Dosis', sans-serif;
-            font-size: 50px;
-            margin-top: 20px;
-            margin-bottom: -10px;
-        }
-
         .hidden {
             opacity: 0;
             transform: translateY(40px);
@@ -92,24 +100,13 @@
 
     <h1>PORTFOLIO</h1>
     <div class="button-container">
-        <button onclick="window.location.href='portfolio-digital_art.html'" class="custom-button">Digital Art</button>
-        <button onclick="window.location.href='portfolio-graphic_design.html'" class="custom-button">Graphic Design</button>
+        <button onclick="window.location.href='portfolio-all.html'" class="custom-button">All</button>    
+        <button onclick="window.location.href='portfolio-software.html'" class="current-button">Software Projects</button>
+        <button onclick="window.location.href='portfolio-games.html'" class="custom-button">Game Development</button>
     </div>
-    <h2>Digital Art/Illustrations</h2>
+
     <main>
-        <div class="image">
-            <img class="hidden" src="art/whale.png" alt="whale">
-            <img class="hidden" src="art/monster.png" alt="monster">
-            <img class="hidden" src="art/bday.png" alt="bday">
-        </div>
-        <div class="image">
-            <img class="hidden" src="art/tanjiro.png" alt="tanjiro">
-            <img class="hidden" src="art/cits.png" alt="cits">
-        </div>
-        <div class="image">
-            <img class="hidden" src="art/muichiro.png" alt="muichiro">
-            <img class="hidden" src="art/kaori.png" alt="kaori">
-        </div>
+
     </main>
 
     <footer id="footer"></footer>

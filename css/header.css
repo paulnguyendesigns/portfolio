@@ -96,7 +96,7 @@ p {
     header {
         padding: 100px 0px;
     }
-    nav .left a[id="projects"] {
+    nav .left a[id="blog"] {
         width: 100%;
         margin-top: 20px;
         text-align: left;
@@ -116,7 +116,7 @@ p {
     header {
         padding: 100px 0px;
     }
-    nav .left a[id="projects"] {
+    nav .left a[id="blog"] {
         width: 100%;
         margin: 35px 0;
         text-align: center;
