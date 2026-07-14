@@ -80,7 +80,6 @@ nav a:hover[id="contact"]{
 }
 p {
     font-size: 12px;
-    white-space: pre;
 }
 @media (max-width: 1300px) {
     nav .left {
