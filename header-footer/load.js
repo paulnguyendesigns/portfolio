@@ -4,10 +4,49 @@ async function loadComponent(id, file) {
     document.getElementById(id).innerHTML = html;
 }
 
+function initHeaderScroll() {
+    const header = document.getElementById("header");
+    if (!header) return;
+
+    let lastScrollY = window.scrollY;
+    let ticking = false;
+
+    function onScroll() {
+        const currentScrollY = window.scrollY;
+
+        // Ignore tiny jitters (e.g. mobile bounce scroll)
+        if (Math.abs(currentScrollY - lastScrollY) < 5) {
+            ticking = false;
+            return;
+        }
+
+        if (currentScrollY > lastScrollY && currentScrollY > header.offsetHeight) {
+            // Scrolling down and past the header — hide it
+            header.classList.add("header-hidden");
+        } else {
+            // Scrolling up — show it
+            header.classList.remove("header-hidden");
+        }
+
+        lastScrollY = currentScrollY;
+        ticking = false;
+    }
+
+    window.addEventListener("scroll", () => {
+        if (!ticking) {
+            window.requestAnimationFrame(onScroll);
+            ticking = true;
+        }
+    });
+}
+
 async function init() {
     // Load components
-    loadComponent("header", "./header-footer/header.html");
+    await loadComponent("header", "./header-footer/header.html");
     await loadComponent("footer", "./header-footer/footer.html");
+
+    // Set up hide/show-on-scroll behavior now that the header exists
+    initHeaderScroll();
 
     // Create observer after footer exists
     const observer = new IntersectionObserver((entries) => {

@@ -24,6 +24,13 @@ header {
     justify-content: space-between;
     align-items: center;
 }
+#header {
+    transform: translateY(0);
+    transition: transform 0.3s ease;
+}
+#header.header-hidden {
+    transform: translateY(-100%);
+}
 header .logo {
     flex: 1;
     text-align: center;
