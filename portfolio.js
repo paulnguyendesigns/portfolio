@@ -11,39 +11,27 @@ const projects = [
     {
         title: "WebGL Fluid Sound Simulator",
         category: "software",
-        software: "Javascript",
+        software: "Github Pages",
         softwareIcon: "ri-ghost-line",
         status: "IN DEVELOPMENT",
         description: "A website that turns audio input into watercolor graphics.",
         tags: ["Javascript", "CSS", "HTML", "Github Pages"],
         still: "./images-gifs/webgl_simulator.png",
         gif: "./images-gifs/webgl_simulator.gif",
-        link: "#"
+        link: "https://paulnguyendesigns.github.io/WebGL-Fluid-Sound-Simulator/"
     },
     {
-        title: "Oliver the Octopus",
-        category: "games",
-        software: "Unity",
+        title: "Hue Day",
+        category: "software",
+        software: "React",
         softwareIcon: "ri-gamepad-line",
         status: null,
-        description: "A platform game based on crates with different mechanics.",
-        tags: ["Adventure", "Platformer", "2.5D", "Co-op", "Family"],
-        still: "assets/oliver_octopus.png",
-        gif: "assets/oliver_octopus.gif",
-        link: "#"
+        description: "An interactive website that finds your seasonal color profile and shows your best colors.",
+        tags: ["Python", "Javascript", "CSS", "HTML", "React", "Flask"],
+        still: "./images-gifs/hue-day.png",
+        gif: "./images-gifs/hue-day.gif",
+        link: "https://devpost.com/software/hue-day"
     },
-    {
-        title: "Tinturaria",
-        category: "games",
-        software: "Unity",
-        softwareIcon: "ri-gamepad-line",
-        status: null,
-        description: "A game about delivering as many colored boxes with the right color as possible.",
-        tags: ["Puzzle", "Casual", "Time Management", "Color Matching", "Arcade"],
-        still: "assets/tinturaria.png",
-        gif: "assets/tinturaria.gif",
-        link: "#"
-    }
 ];
 
 const COLUMNS = 3; // matches the grid-template-columns in css/portfolio.css
