@@ -4,24 +4,373 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home | Paul Nguyen - Portfolio</title>
-	<link href="https://fonts.googleapis.com/css?family=Lexend" rel='stylesheet'/>
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet"/>
-    <link href="./css/header.css" rel="stylesheet"/>
-    <link href="./css/footer.css" rel="stylesheet"/>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Dosis:wght@300..800&family=Lexend:wght@300..900&family=M+PLUS+Rounded+1c:wght@100;300;400;500;700;800;900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
+
+    <!-- Shared Styles -->
+    <link href="./css/header.css" rel="stylesheet">
+    <link href="./css/footer.css" rel="stylesheet">
     <!--style-->
     <style>
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 20px 100px;
+        }
 
+        /* ---------- Hero: polaroid + name/projects ---------- */
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 340px 1fr;
+            gap: 140px;
+            align-items: start;
+        }
+
+        @media (max-width: 800px) {
+            .hero-grid {
+                grid-template-columns: 1fr;
+                justify-items: center;
+                text-align: center;
+                gap: 40px;
+            }
+        }
+
+        /* Polaroid photo */
+        .polaroid-wrap {
+            position: relative;
+            padding-top: 50px;
+        }
+
+        .polaroid {
+            background: #fff;
+            padding: 36px 36px 110px;
+            border-radius: 4px;
+            box-shadow: 0 18px 40px rgba(241, 161, 124, 0.24);
+            transform: rotate(-4deg);
+            transition: transform 0.3s ease;
+        }
+
+        .polaroid:hover {
+            transform: rotate(-1deg) scale(1.02);
+        }
+
+        .polaroid img {
+            display: block;
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+            border-radius: 2px;
+        }
+
+
+        /* Name + recent projects */
+        .intro-name {
+            font-family: 'Poppins', sans-serif;
+            font-size: 96px;
+            font-weight: 900;
+            line-height: 0.95;
+            margin: 0 0 5px -5px;
+        }
+
+        .intro-name .name-bold {
+            display: block;
+            color:rgb(241, 161, 124);
+        }
+
+        .intro-name .name-ghost {
+            display: block;
+            color:rgb(207, 103, 83);
+        }
+
+        .typing-line {
+            font-family: 'Space Mono', monospace;
+            font-size: 28px;
+            font-weight: 700;
+            color: rgb(165, 68, 48);
+            min-height: 30px;
+            margin: 0;
+        }
+
+        .typing-line .cursor {
+            color: rgb(165, 68, 48);
+            animation: blink 0.9s step-end infinite;
+        }
+
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+
+        .flip-info {
+            perspective: 500px;
+            height: 26px;
+            overflow: hidden;
+            font-family: 'Rubik', sans-serif;
+            font-size: 20px;
+            color: #6b6b6b;
+            margin-top: 10px;
+            margin-bottom: 30px;
+        }
+
+        .flip-word {
+            display: inline-block;
+            color: rgb(207, 103, 83);
+            font-weight: 700;
+            transform-origin: top;
+        }
+
+        .flip-word.flipping {
+            animation: flipUp 0.6s ease;
+        }
+
+        @keyframes flipUp {
+            0%   { transform: rotateX(0deg);   opacity: 1; }
+            49%  { transform: rotateX(-90deg); opacity: 0; }
+            51%  { transform: rotateX(90deg);  opacity: 0; }
+            100% { transform: rotateX(0deg);   opacity: 1; }
+        }
+
+        .recent-label {
+            font-family: 'Rubik', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: rgb(207, 103, 83);
+            margin-bottom: 14px;
+        }
+
+        .recent-projects {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .project-row {
+            display: flex;
+            align-items: center;
+            gap: 22px;
+            padding: 12px;
+            border: 1px solid rgb(207, 103, 83);
+            border-radius: 15px;
+            text-decoration: none;
+            transition: background 0.25s ease, transform 0.25s ease;
+        }
+
+        .project-row:hover {
+            background: none;
+            transform: translateX(4px);
+        }
+
+        .project-thumb {
+            width: 68px;
+            height: 68px;
+            border-radius: 15px;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .project-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .project-info h3 {
+            font-family: 'Dosis', sans-serif;
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            color: rgb(207, 103, 83);
+            margin: 0;
+        }
+
+        .project-info p {
+            font-family: 'M Plus Rounded 1c', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            color: rgb(165, 68, 48);
+            margin: 6px 0 0;
+        }
+
+        .project-arrow {
+            color: rgb(207, 103, 83);
+            font-size: 20px;
+            margin-bottom: 40px;
+            transition: transform 0.25s ease;
+        }
+
+        .project-row:hover .project-arrow {
+            transform: translate(3px, -3px);
+        }
+
+        /* ---------- Bottom: centered CTA buttons ---------- */
+
+        .bottom-section {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 18px;
+        }
+
+        .btn-primary,
+        .btn-secondary {
+            font-family: 'Dosis', sans-serif;
+            font-size: 26px;
+            font-weight: 600;
+            padding: 14px 32px;
+            border-radius: 15px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: transform 0.25s ease, background-color 0.25s ease;
+        }
+
+        .btn-primary {
+            background: rgb(207, 103, 83);
+            color: #fff;
+            border: 2px solid rgb(207, 103, 83);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            background: rgb(241, 161, 124);
+            border-color: rgb(241, 161, 124);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: rgb(207, 103, 83);
+            border: 2px solid rgb(207, 103, 83);
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            background: rgba(207, 103, 83, 0.12);
+        }
     </style>
 </head>
 <body>
     <header id="header"></header>
 
     <main>
-        <h1 style="text-align: center; margin: 150px;">Home page is a work in progress...</h1>
+        <section class="hero-grid">
+            <div class="polaroid-wrap">
+                <div class="polaroid">
+                    <img src="./images-gifs/headshot.jpg" alt="Paul Nguyen">
+                </div>
+            </div>
+
+            <div class="intro">
+                <h1 class="intro-name">
+                    <span class="name-bold">PAUL</span>
+                    <span class="name-ghost">NGUYEN</span>
+                </h1>
+
+                <p class="typing-line"><span id="typed-text"></span><span class="cursor">|</span></p>
+
+                <div class="flip-info">
+                    <span id="flip-word" class="flip-word"></span>
+                </div>
+
+                <div class="recent-label">Recent Projects</div>
+                <div class="recent-projects">
+                    <a class="project-row" href="portfolio-software.html">
+                        <img class="project-thumb" src="./images-gifs/webgl_simulator.gif" alt="WebGL Fluid Sound Simulator thumbnail">
+                        <div class="project-info">
+                            <h3>WebGL Fluid Sound Simulator</h3>
+                            <p>Javascript &middot; In Development</p>
+                        </div>
+                        <i class="ri-arrow-right-up-line project-arrow"></i>
+                    </a>
+                    <a class="project-row" href="portfolio-games.html">
+                        <img class="project-thumb" src="./images-gifs/hue-day.gif" alt="Oliver the Octopus thumbnail">
+                        <div class="project-info">
+                            <h3>Hue Day</h3>
+                            <p>React &middot; Hackathon</p>
+                        </div>
+                        <i class="ri-arrow-right-up-line project-arrow"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section class="bottom-section">
+            <div class="cta-buttons">
+                <a class="btn-primary" href="portfolio-all.html">View Projects</a>
+                <a class="btn-secondary" href="about.html">About Me</a>
+            </div>
+        </section>
     </main>
 
     <footer id="footer"></footer>
     <script src="./header-footer/load.js"></script>
     <script src="./ham_menu.js"></script>
+    <script>
+        // ---------- Typing loop: "Welcome to my page!" <-> "Check out my projects!" ----------
+        const typingPhrases = ["Welcome to my page!", "Check out my projects!"];
+        let phraseIndex = 0;
+        let charIndex = 0;
+        let typingForward = true;
+        const typedEl = document.getElementById("typed-text");
+
+        function typeLoop() {
+            const current = typingPhrases[phraseIndex];
+            let delay;
+
+            if (typingForward) {
+                charIndex++;
+                typedEl.textContent = current.slice(0, charIndex);
+                if (charIndex === current.length) {
+                    typingForward = false;
+                    delay = 1400; // pause on full phrase before deleting
+                } else {
+                    delay = 75;
+                }
+            } else {
+                charIndex--;
+                typedEl.textContent = current.slice(0, charIndex);
+                if (charIndex === 0) {
+                    typingForward = true;
+                    phraseIndex = (phraseIndex + 1) % typingPhrases.length;
+                    delay = 400; // pause before typing the next phrase
+                } else {
+                    delay = 40;
+                }
+            }
+
+            setTimeout(typeLoop, delay);
+        }
+
+        typeLoop();
+
+        // ---------- Flip-up info rotator ----------
+        const flipWords = [
+            "Based in the Bay Area & UC Davis.",
+            "CS Undergrad Student & Game Developer."
+        ];
+        let flipIndex = 0;
+        const flipEl = document.getElementById("flip-word");
+        flipEl.textContent = flipWords[flipIndex];
+
+        function cycleFlip() {
+            flipEl.classList.add("flipping");
+            setTimeout(() => {
+                flipIndex = (flipIndex + 1) % flipWords.length;
+                flipEl.textContent = flipWords[flipIndex];
+            }, 300);
+            setTimeout(() => {
+                flipEl.classList.remove("flipping");
+            }, 600);
+        }
+
+        setInterval(cycleFlip, 3400);
+    </script>
 </body>
 </html>
