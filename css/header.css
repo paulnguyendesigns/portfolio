@@ -242,8 +242,13 @@ body {
     color: #ffffff;
 }
 
-/* Hamburger + close — fixed chrome, siblings of #paper-window, so their
-   position is unaffected by the tilt transform happening inside it. */
+/* Hamburger + close -- fixed chrome, siblings of #paper-window (see
+   load.js's setupPaperShell comment for why they must NOT be descendants
+   of #paper-front). Their position is unaffected by the tilt transform
+   happening inside #paper-window. The "chrome-hidden" class is toggled by
+   load.js in lockstep with the header's own "header-hidden" class, so they
+   visually move together on scroll even though they're not nested inside
+   the header in the DOM. */
 .hamburger,
 .close {
     position: fixed;
@@ -256,11 +261,21 @@ body {
     background: none;
     border: none;
     padding: 0;
+    transition: transform var(--transition-speed) ease;
+}
+
+.hamburger.chrome-hidden,
+.close.chrome-hidden {
+    transform: translateY(calc(-1 * var(--header-height) - 20px));
 }
 
 .hamburger {
     display: none;
     user-select: none;
+}
+
+.close {
+    display: none;
 }
 
 .hamburger span,
@@ -289,10 +304,6 @@ body {
 
 .hamburger span::after {
     bottom: -28px;
-}
-
-.close {
-    display: none;
 }
 
 .close::before,
@@ -329,7 +340,7 @@ body {
 }
 
 #paper-window.tilt ~ .close {
-    display: block;
+    display: flex;
 }
 
 /* ============================
@@ -350,7 +361,7 @@ body.nav-mobile .contact-icon {
 }
 
 body.nav-mobile .hamburger {
-    display: block;
+    display: flex;
 }
 
 @media (max-width: 480px) {
@@ -365,7 +376,7 @@ body.nav-mobile .hamburger {
     }
 
     .hamburger {
-        display: block;
+        display: flex;
     }
 }
 

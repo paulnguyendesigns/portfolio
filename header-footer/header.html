@@ -1,36 +1,36 @@
-<header id="header" class="site-header">
-  <div class="header-inner">
+<div class="header-inner">
 
-    <!-- Logo -->
-    <div class="brand">
-      <a href="index.html" class="logo-link" aria-label="Home">
-        <img src="./images-gifs/home_logo.png" alt="Home Logo" class="logo-img">
-      </a>
-    </div>
-
-    <!-- Left slot: desktop primary nav (mobile uses the fixed hamburger injected by load.js) -->
-    <div class="nav-start">
-      <nav class="primary-nav" aria-label="Primary">
-        <ul class="nav-list">
-          <li><a href="index.html">Home</a></li>
-          <li><a href="about.html">About</a></li>
-          <li><a href="portfolio-all.html">Portfolio</a></li>
-          <li><a href="updates.html">Updates</a></li>
-        </ul>
-      </nav>
-    </div>
-
-    <!-- Right slot: desktop actions (contact + socials), or mobile contact icon -->
-    <div class="header-actions">
-      <nav class="social-nav" aria-label="Contact and social">
-        <a href="contact.html" class="contact-link">Contact</a>
-        <a href="https://github.com/paulnguyendesigns" class="icon-link" aria-label="GitHub"><i class="ri-github-fill"></i></a>
-        <a href="https://www.linkedin.com/in/paul-nguyen-833158333" class="icon-link" aria-label="LinkedIn"><i class="ri-linkedin-box-fill"></i></a>
-        <a href="mailto:paulxnguyen12@gmail.com" class="icon-link" aria-label="Email"><i class="ri-mail-line"></i></a>
-      </nav>
-
-      <a href="contact.html" class="icon-link contact-icon" aria-label="Contact"><i class="ri-contacts-line"></i></a>
-    </div>
-
+  <!-- Logo -->
+  <div class="brand">
+    <a href="index.html" class="logo-link" aria-label="Home">
+      <img src="./images-gifs/home_logo.png" alt="Home Logo" class="logo-img">
+    </a>
   </div>
-</header>
+
+  <!-- Left slot: desktop primary nav (mobile uses the hamburger, kept outside
+       this markup since it must never be a descendant of #paper-front -- see
+       load.js for why) -->
+  <div class="nav-start">
+    <nav class="primary-nav" aria-label="Primary">
+      <ul class="nav-list">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="portfolio-all.html">Portfolio</a></li>
+        <li><a href="updates.html">Updates</a></li>
+      </ul>
+    </nav>
+  </div>
+
+  <!-- Right slot: desktop actions (contact + socials), or mobile contact icon -->
+  <div class="header-actions">
+    <nav class="social-nav" aria-label="Contact and social">
+      <a href="contact.html" class="contact-link">Contact</a>
+      <a href="https://github.com/paulnguyendesigns" class="icon-link" aria-label="GitHub"><i class="ri-github-fill"></i></a>
+      <a href="https://www.linkedin.com/in/paul-nguyen-833158333" class="icon-link" aria-label="LinkedIn"><i class="ri-linkedin-box-fill"></i></a>
+      <a href="mailto:paulxnguyen12@gmail.com" class="icon-link" aria-label="Email"><i class="ri-mail-line"></i></a>
+    </nav>
+
+    <a href="contact.html" class="icon-link contact-icon" aria-label="Contact"><i class="ri-contacts-line"></i></a>
+  </div>
+
+</div>

@@ -5,9 +5,17 @@ async function loadComponent(id, file) {
 }
 
 // Builds the paper-tilt shell at runtime: moves everything currently in
-// <body> into #paper-front (inside the scrollable #paper-window), then
-// adds #paper-back (the real nav, revealed on tilt) and the hamburger/
-// close buttons as body-level siblings so they never rotate with the page.
+// <body> into #paper-front (inside the scrollable #paper-window), then adds
+// #paper-back (the real nav, revealed on tilt) and the hamburger/close
+// buttons as body-level siblings -- NOT descendants of #paper-front.
+//
+// That placement is required, not cosmetic: paperMenu.open() adds a
+// "click anywhere on the page closes the menu" listener to #paper-front
+// during the same click event that opened it. If the hamburger lived
+// inside #paper-front, that same click would keep bubbling upward, hit
+// the listener that was *just* attached, and immediately close the menu
+// it had just opened -- a single click would open and self-close in one
+// tick. Keeping the hamburger/close outside that subtree avoids it.
 function setupPaperShell() {
     const paperWindow = document.createElement("div");
     paperWindow.id = "paper-window";
@@ -52,15 +60,25 @@ function setupPaperShell() {
     document.body.appendChild(closeBtn);
 }
 
-// Hide/show the sticky header based on scroll direction. Now reads
-// #paper-window's scrollTop instead of window.scrollY, since
-// #paper-window (not the document) is the actual scroll container.
+// Hide/show the sticky header based on scroll direction, and keep the
+// hamburger/close buttons in sync by toggling the same "chrome-hidden"
+// class on them -- they can't just inherit the header's own transform
+// since (per setupPaperShell's comment above) they deliberately live
+// outside the header/#paper-front subtree.
 function initHeaderScroll(scrollContainer) {
     const header = document.getElementById("header");
+    const hamburger = document.getElementById("hamburger");
+    const closeBtn = document.getElementById("close");
     if (!header || !scrollContainer) return;
 
     let lastScrollY = scrollContainer.scrollTop;
     let ticking = false;
+
+    function setHidden(hidden) {
+        header.classList.toggle("header-hidden", hidden);
+        if (hamburger) hamburger.classList.toggle("chrome-hidden", hidden);
+        if (closeBtn) closeBtn.classList.toggle("chrome-hidden", hidden);
+    }
 
     function onScroll() {
         const currentScrollY = scrollContainer.scrollTop;
@@ -71,9 +89,9 @@ function initHeaderScroll(scrollContainer) {
         }
 
         if (currentScrollY > lastScrollY && currentScrollY > header.offsetHeight) {
-            header.classList.add("header-hidden");
+            setHidden(true);
         } else {
-            header.classList.remove("header-hidden");
+            setHidden(false);
         }
 
         lastScrollY = currentScrollY;
@@ -89,7 +107,7 @@ function initHeaderScroll(scrollContainer) {
 }
 
 // Switches to the mobile nav (hamburger) exactly when the desktop nav,
-// logo, and actions would actually overlap — not at a guessed pixel
+// logo, and actions would actually overlap -- not at a guessed pixel
 // breakpoint. Since the logo/nav/actions all use fixed (non-scaling)
 // sizes, the width where they collide depends on their real measured
 // widths, which this checks directly.
@@ -161,8 +179,13 @@ const paperMenu = {
     open() {
         this.windowEl.classList.add("tilt");
         this.hamburgerEl.setAttribute("aria-expanded", "true");
-        // While open, clicking anywhere on the tilted front page closes the menu
-        this.frontEl.addEventListener("click", this.closeBound);
+        // While open, clicking anywhere on the tilted front page closes the
+        // menu. Deferred one tick so the click that just opened the menu
+        // (which is still bubbling at this point) doesn't immediately
+        // trigger this same listener and self-close it.
+        requestAnimationFrame(() => {
+            this.frontEl.addEventListener("click", this.closeBound);
+        });
     },
 
     close() {
@@ -174,7 +197,7 @@ const paperMenu = {
     updateTransformOrigin() {
         const scrollTop = this.windowEl.scrollTop;
         let equation = ((scrollTop + this.offset) / this.pageHeight) * 100;
-        // Clamp so the pivot point never lands outside the actual page —
+        // Clamp so the pivot point never lands outside the actual page --
         // without this, short pages cause the tilt to swing wildly out
         // of view instead of a controlled, visible reveal.
         equation = Math.min(Math.max(equation, 0), 100);
@@ -216,6 +239,11 @@ async function init() {
     // Load components
     await loadComponent("header", "./header-footer/header.html");
     await loadComponent("footer", "./header-footer/footer.html");
+
+    // header.html is just the inner markup (no wrapping <header> tag) --
+    // the "site-header" class that drives its background/sticky/hide
+    // styling belongs on the placeholder itself, applied here once.
+    document.getElementById("header").classList.add("site-header");
 
     const paperWindowEl = document.getElementById("paper-window");
 
