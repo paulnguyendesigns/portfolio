@@ -1,5 +1,7 @@
-html {
-    overflow-y: scroll;
+html,
+body {
+    height: 100%;
+    overflow: hidden;
 }
 
 body {
@@ -8,166 +10,365 @@ body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+}
+
+:root {
+    --header-bg: #ffffff;
+    --header-text: #000000;
+    --header-text-muted: #575757;
+    --header-pad-y: 35px;
+    --header-pad-x: 50px;
+    --logo-height: 140px;
+    --nav-gap: 60px;
+    --icon-size: 40px;
+    --transition-speed: 0.3s;
+    --mobile-breakpoint: 900px;
+    --z-header: 1000;
+    --z-paper-back: 1;
+    --z-paper-window: 2;
+    --z-paper-front: 3;
+    --z-chrome: 4;
+    --header-height: calc(var(--logo-height) + (2 * var(--header-pad-y)));
+}
+
+/* ============================
+   Header shell
+   position:sticky + transform-only hide/show. Padding is fluid
+   (clamp) instead of jumping at breakpoints, so the header height
+   never "pops" while resizing or scrolling.
+   ============================ */
+.site-header {
+    background-color: var(--header-bg);
+    color: var(--header-text);
+    position: sticky;
+    top: 0;
+    width: 100%;
+    z-index: var(--z-header);
+    transition: transform var(--transition-speed) ease;
+}
+
+.site-header.header-hidden {
+    transform: translateY(-100%);
+}
+
+/* ============================
+   Grid layout: logo / nav / actions
+   This is the key structural fix. A 3-column grid means the logo
+   has a real, reserved column — it can never overlap the nav links
+   the way it did with position:absolute, regardless of how much
+   space the nav or action items take up.
+   ============================ */
+.header-inner {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    padding: var(--header-pad-y) var(--header-pad-x);
+    margin: 0 auto;
+}
+
+.brand {
+    order: 2;
+    justify-self: center;
+}
+
+.logo-link {
+    display: block;
+}
+
+.logo-img {
+    height: var(--logo-height);
+    width: auto;
+    display: block;
+    margin-left: 30px;
+    margin-right: 30px;
+}
+
+/* ============================
+   Primary nav (desktop)
+   ============================ */
+.nav-start {
+    order: 1;
+    justify-self: start;
+    display: flex;
+    align-items: center;
+}
+
+.primary-nav {
+    display: block;
+}
+
+.nav-list {
+    list-style: none;
+    display: flex;
+    gap: var(--nav-gap);
+    margin: 0;
+    padding: 0;
+}
+
+.nav-list a {
+    text-decoration: none;
+    color: var(--header-text);
+    white-space: nowrap;
+}
+
+.nav-list a:hover {
+    text-decoration: underline;
+    text-underline-offset: 6px;
+}
+
+/* ============================
+   Actions: contact + socials (desktop) / hamburger (mobile)
+   ============================ */
+.header-actions {
+    order: 3;
+    justify-self: end;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.social-nav {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.contact-link {
+    color: var(--header-text);
+    text-decoration: none;
+    margin-left: 20px;
+    white-space: nowrap;
+}
+
+.contact-link:hover {
+    text-decoration: underline;
+    text-underline-offset: 6px;
+}
+
+.icon-link {
+    color: var(--header-text-muted);
+    font-size: var(--icon-size);
+    line-height: 1;
+    margin-left: 20px;
+    display: flex;
+    text-decoration: none;
+}
+
+.icon-link:hover {
+    color: var(--header-text);
+    text-decoration: none;
+}
+
+/* Contact icon shows only on mobile; desktop uses the full social-nav */
+.contact-icon {
+    display: none;
+}
+
+/* ============================
+   Paper-tilt mobile menu
+   load.js wraps all existing body content in #paper-window > #paper-front
+   at runtime, and injects #paper-back plus the hamburger/close buttons
+   as body-level siblings. Opening the menu tilts #paper-front off to the
+   side, revealing #paper-back (the real nav) sitting underneath.
+   ============================ */
+
+/* The scrollable "page" — this replaces the document/body as the
+   scroll container, since #paper-front needs a fixed-size viewport
+   to rotate within. */
+#paper-window {
+    height: 100vh;
+    width: 100vw;
+    position: relative;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    z-index: var(--z-paper-window);
+}
+
+#paper-window.tilt {
+    overflow: hidden;
+    /* Without this, #paper-window (which spans the full viewport at all
+       times) intercepts clicks even over the transparent areas where
+       #paper-back is visually showing through — nav links underneath
+       become unclickable. #paper-front re-enables pointer events on
+       itself below, so clicking the visible sliver of the page still
+       closes the menu. */
+    pointer-events: none;
+}
+
+/* The actual page content (header injected here, plus everything else).
+   Carries the sticky-footer flex layout that used to live on body. */
+#paper-front {
+    pointer-events: auto;
+    position: relative;
+    z-index: var(--z-paper-front);
+    background-color: var(--header-bg);
+    box-shadow: 0 0 20px rgb(197, 119, 83);
+    transform-origin: center 70%;
+    transition: transform var(--transition-speed) ease;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
 }
-header {
-    background-color: #ffffff;
-    color: white;
-    padding: 35px 0px;
-    position: sticky;
+
+#paper-window.tilt #paper-front {
+    transform: translateX(24%) rotate(10deg) translateZ(0);
+}
+
+/* The reveal layer sitting behind the page — this is the actual mobile nav */
+#paper-back {
     width: 100%;
+    height: 100vh;
+    background-color: rgb(241, 161, 124);
+    position: fixed;
     top: 0;
-    z-index: 1000;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    left: 0;
+    z-index: var(--z-paper-back);
 }
-#header {
-    transform: translateY(0);
-    transition: transform 0.3s ease;
+
+#paper-back nav {
+    padding: 160px 54px;
 }
-#header.header-hidden {
-    transform: translateY(-100%);
+
+#paper-back nav a {
+    display: block;
+    margin-bottom: 25px;
+    text-decoration: none;
+    font-size: 28px;
+    font-family: 'Lexend', sans-serif;
+    color: rgba(255, 255, 255, 0.7);
 }
-header .logo {
-    flex: 1;
-    text-align: center;
+
+#paper-back nav a:hover {
+    color: #ffffff;
+}
+
+/* Hamburger + close — fixed chrome, siblings of #paper-window, so their
+   position is unaffected by the tilt transform happening inside it. */
+.hamburger,
+.close {
+    position: fixed;
+    top: calc((var(--header-height) - 34px) / 2);
+    left: var(--header-pad-x);
+    z-index: var(--z-chrome);
+    width: 45px;
+    height: 34px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+}
+
+.hamburger {
+    display: none;
+    user-select: none;
+}
+
+.hamburger span,
+.hamburger span::before,
+.hamburger span::after {
+    display: block;
+    width: 45px;
+    height: 6px;
+    background-color: var(--header-text);
+    border-radius: 2px;
+}
+
+.hamburger span {
+    position: relative;
+}
+
+.hamburger span::before,
+.hamburger span::after {
+    content: '';
     position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
 }
-header .icon {
-    top: 10px;
-    color: black;
-    display: flex;
-    font-size: 40px;
-    margin-left: 30px;
+
+.hamburger span::before {
+    bottom: -14px;
+}
+
+.hamburger span::after {
+    bottom: -28px;
+}
+
+.close {
     display: none;
 }
-header .logo img {
-    max-height: 140px;
-    height: auto;
+
+.close::before,
+.close::after {
+    content: '';
+    position: absolute;
+    display: block;
+    width: 45px;
+    height: 6px;
+    top: 50%;
+    background-color: #ffffff;
+    border-radius: 2px;
 }
-nav .left {
-    display: flex;
-    align-items: center;
+
+.close::before {
+    transform: translateY(-50%) rotate(45deg);
 }
-nav .right {
-    display: flex;
-    align-items: center;
-    margin-right:50px;
+
+.close::after {
+    transform: translateY(-50%) rotate(-45deg);
 }
-nav a {
-    text-decoration:none;
+
+.hamburger:focus-visible,
+.close:focus-visible {
+    outline: 2px solid var(--header-text);
+    outline-offset: 3px;
 }
-nav .left a {
-    color: rgb(0, 0, 0);
-    margin: 0 30px;
+
+/* Swap which icon shows based on open state, driven purely by the
+   .tilt class load.js toggles on #paper-window — no extra JS needed
+   to manage icon visibility. */
+#paper-window.tilt ~ .hamburger {
+    display: none;
 }
-nav .right a[id="contact"] {
-    color: black;
-}
-nav .right a {
-    color: rgb(87, 87, 87);
-    margin: 0 15px;
+
+#paper-window.tilt ~ .close {
     display: block;
 }
-nav .right a:hover {
-    color: black;
+
+/* ============================
+   Mobile nav switch
+   Driven by body.nav-mobile, which load.js toggles based on actually
+   measuring whether the nav/logo/actions would overlap — not a
+   guessed pixel breakpoint. The max-width query below is a no-JS
+   fallback only.
+   ============================ */
+body.nav-mobile .primary-nav,
+body.nav-mobile .social-nav {
+    display: none;
 }
-nav .left a[id="home"] {
-    margin-left:50px;
+
+body.nav-mobile .contact-icon {
+    display: flex;
+    align-items: center;
 }
-nav .left a:hover,
-nav a:hover[id="contact"]{
-    text-decoration: underline;
-    text-underline-offset: 6px;
+
+body.nav-mobile .hamburger {
+    display: block;
 }
-p {
-    font-size: 12px;
-}
-@media (max-width: 1300px) {
-    nav .left {
-        display: flex;
-        flex-wrap: wrap;
-    }
-    header {
-        padding: 100px 0px;
-    }
-    nav .left a[id="blog"] {
-        width: 100%;
-        margin-top: 20px;
-        text-align: left;
-        margin-left:50px;
-    }
-}
-@media (min-width: 1051px) {
-    #hamburger,
-    #close {
+
+@media (max-width: 480px) {
+    .primary-nav,
+    .social-nav {
         display: none;
     }
-}
-@media (max-width: 1050px) {
-    header .logo img {
-        max-height: 160px;
-    }
-    header {
-        padding: 100px 0px;
-    }
-    nav .left a[id="blog"] {
-        width: 100%;
-        margin: 35px 0;
-        text-align: center;
-    }
-    nav .left a[id="home"] {
-        margin-left: 5px;
-        margin-top: 120px;
-    }
-    nav a[id="menu"] {
-        display: block;
-        margin-left: 30px;
-    }
-    nav a[id="cancel"].active {
-        display: block;
-        margin-left: 30px;
-    }
-    nav .left {
-        background: white;
-        height: 100vh;
-        width: 100%;
-        margin-top: 50px;
-        position: fixed;
-        top: 0;
-        left: -100%;
+
+    .contact-icon {
         display: flex;
-        flex-direction: column;
-        align-items: center;    
-        justify-content: center;
-        text-align: center;
-        font-size: 3rem;
-        transition: .3s ease;
-        z-index:-1;
-    }
-    nav .left a {
-        margin: 35px 0;
-    }
-    nav .left.active {
-        left: 0;
+        align-items: center;
     }
 
-}
-@media (max-width: 1050px) {
-    nav a[id="hamburger"],
-    nav a[id="contact_logo"] {
+    .hamburger {
         display: block;
-        margin-right: 30px;
     }
-    nav .right {
-        position: absolute;
-        top: -100%;
-        left: -100%;
-        
-    }
+}
+
+p {
+    font-size: 12px;
 }
