@@ -48,6 +48,9 @@ async function init() {
     // Set up hide/show-on-scroll behavior now that the header exists
     initHeaderScroll();
 
+    // Set up the hamburger menu now that the header exists in the DOM
+    initHamMenu();
+
     // Create observer after footer exists
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
