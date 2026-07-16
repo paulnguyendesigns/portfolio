@@ -38,7 +38,7 @@ function setupPaperShell() {
             <a href="about.html">About</a>
             <a href="portfolio-all.html">Portfolio</a>
             <a href="updates.html">Updates</a>
-            <a href="contact.html">Contact</a>
+            <a href="about.html#contact">Contact</a>
         </nav>`;
     document.body.appendChild(paperBack);
 
@@ -149,6 +149,65 @@ function initNavCollisionCheck() {
     });
 }
 
+// Smoothly scrolls to same-page hash links (e.g. "Contact" -> "#contact").
+// Needed because the page scrolls inside #paper-window, not the real
+// `window` -- a plain `href="#contact"` jump does nothing on its own here,
+// and a browser's native cross-page hash-jump (arriving from another page
+// with "about.html#contact" in the URL) would also just snap instantly,
+// before #paper-window even exists yet.
+function initSmoothAnchors(scrollContainer) {
+    function targetOffsetTop(target) {
+    const header = document.getElementById("header");
+    const headerHeight = header ? header.offsetHeight : 0;
+
+    const offset = 220;
+
+    return Math.max(target.offsetTop - headerHeight + offset, 0);
+    }
+
+    function scrollToHash(hash, smooth) {
+        const target = document.getElementById(hash.replace("#", ""));
+        if (!target) return;
+        scrollContainer.scrollTo({
+            top: targetOffsetTop(target),
+            behavior: smooth ? "smooth" : "auto"
+        });
+    }
+
+    // Intercept clicks on links that point at a hash on *this* page (same
+    // pathname) and scroll instead of doing a full page reload. Links to a
+    // hash on a *different* page (e.g. clicking "Contact" from index.html)
+    // are left alone -- the browser navigates normally, and that page's own
+    // load.js will pick up the hash once it finishes loading.
+    document.addEventListener("click", (event) => {
+        const link = event.target.closest("a[href*='#']");
+        if (!link) return;
+
+        let url;
+        try {
+            url = new URL(link.getAttribute("href"), window.location.href);
+        } catch {
+            return;
+        }
+
+        const samePage = url.pathname === window.location.pathname;
+        if (!samePage || !url.hash) return;
+
+        event.preventDefault();
+        scrollToHash(url.hash, true);
+        history.pushState(null, "", url.hash);
+    });
+
+    // Arrived here fresh with a hash already in the URL (e.g. followed
+    // "about.html#contact" from another page). Wait for full load so
+    // images have their real height before measuring offsetTop.
+    if (window.location.hash) {
+        window.addEventListener("load", () => {
+            scrollToHash(window.location.hash, true);
+        });
+    }
+}
+
 // The paper-tilt menu. Tilting #paper-front reveals #paper-back
 // underneath it; the transform-origin is kept in sync with scroll
 // position so the page always tilts around a sensible pivot point.
@@ -252,6 +311,10 @@ async function init() {
 
     // Switch to the hamburger exactly when the desktop layout would collide
     initNavCollisionCheck();
+
+    // Smoothly scroll to same-page hash links (e.g. the Contact nav link
+    // now pointing at about.html#contact)
+    initSmoothAnchors(paperWindowEl);
 
     // Set up the paper-tilt mobile menu
     paperMenu.init();
