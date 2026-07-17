@@ -4,6 +4,15 @@ async function loadComponent(id, file) {
     document.getElementById(id).innerHTML = html;
 }
 
+// Take scroll position fully into our own hands. Left as "auto" (the
+// default), the browser can restore whatever scroll position a previous
+// visit to this page had -- or jump partway toward a #fragment on its
+// own -- before our own code below ever runs, which is the other half of
+// the "snaps somewhere, then glides to the right spot" effect.
+if ("scrollRestoration" in history) {
+    history.scrollRestoration = "manual";
+}
+
 // Builds the paper-tilt shell at runtime: moves everything currently in
 // <body> into #paper-front (inside the scrollable #paper-window), then adds
 // #paper-back (the real nav, revealed on tilt) and the hamburger/close
@@ -29,6 +38,14 @@ function setupPaperShell() {
 
     paperWindow.appendChild(paperFront);
     document.body.appendChild(paperWindow);
+
+    // Force the scroll position back to the very top. The browser's own
+    // "jump to the #fragment" behavior (or bfcache scroll restoration) can
+    // otherwise land #paper-window somewhere down the page before our own
+    // script gets a chance to run its smooth, animated scroll -- producing
+    // an instant snap partway down followed by a second, separate glide.
+    // Doing this here, as early as possible, avoids that first snap.
+    paperWindow.scrollTop = 0;
 
     const paperBack = document.createElement("div");
     paperBack.id = "paper-back";
@@ -65,14 +82,22 @@ function setupPaperShell() {
 // class on them -- they can't just inherit the header's own transform
 // since (per setupPaperShell's comment above) they deliberately live
 // outside the header/#paper-front subtree.
+//
+// Returns { suspend, resume } so a programmatic scroll (like scrolling to
+// a hash link) can pin the header visible for its duration -- otherwise
+// the auto-hide logic below reacts to that same scroll animation and can
+// hide the header mid-flight, which changes the effective header-height
+// offset a hash scroll was aiming for and makes the landing spot look
+// wrong until a second attempt (nothing left to fight over its state).
 function initHeaderScroll(scrollContainer) {
     const header = document.getElementById("header");
     const hamburger = document.getElementById("hamburger");
     const closeBtn = document.getElementById("close");
-    if (!header || !scrollContainer) return;
+    if (!header || !scrollContainer) return null;
 
     let lastScrollY = scrollContainer.scrollTop;
     let ticking = false;
+    let suspended = false;
 
     function setHidden(hidden) {
         header.classList.toggle("header-hidden", hidden);
@@ -82,6 +107,16 @@ function initHeaderScroll(scrollContainer) {
 
     function onScroll() {
         const currentScrollY = scrollContainer.scrollTop;
+
+        if (suspended) {
+            // A hash-link scroll is in progress -- keep the header visible
+            // and stable so the offset it was scrolled to doesn't shift
+            // out from under it.
+            setHidden(false);
+            lastScrollY = currentScrollY;
+            ticking = false;
+            return;
+        }
 
         if (Math.abs(currentScrollY - lastScrollY) < 5) {
             ticking = false;
@@ -104,6 +139,17 @@ function initHeaderScroll(scrollContainer) {
             ticking = true;
         }
     }, { passive: true });
+
+    return {
+        suspend() {
+            suspended = true;
+            setHidden(false);
+        },
+        resume() {
+            suspended = false;
+            lastScrollY = scrollContainer.scrollTop;
+        }
+    };
 }
 
 // Switches to the mobile nav (hamburger) exactly when the desktop nav,
@@ -155,22 +201,45 @@ function initNavCollisionCheck() {
 // and a browser's native cross-page hash-jump (arriving from another page
 // with "about.html#contact" in the URL) would also just snap instantly,
 // before #paper-window even exists yet.
-function initSmoothAnchors(scrollContainer) {
+function initSmoothAnchors(scrollContainer, headerScrollControls) {
     function targetOffsetTop(target) {
-    const header = document.getElementById("header");
-    const headerHeight = header ? header.offsetHeight : 0;
+        const header = document.getElementById("header");
+        const headerHeight = header ? header.offsetHeight : 0;
 
-    const offset = 100;
+        const offset = 100;
 
-    return Math.max(target.offsetTop - headerHeight + offset, 0);
+        return Math.max(target.offsetTop - headerHeight + offset, 0);
     }
 
     function scrollToHash(hash, smooth) {
         const target = document.getElementById(hash.replace("#", ""));
         if (!target) return;
-        scrollContainer.scrollTo({
-            top: targetOffsetTop(target),
-            behavior: smooth ? "smooth" : "auto"
+
+        // Pin the header visible for the whole trip -- see the comment on
+        // initHeaderScroll's return value for why this matters.
+        if (headerScrollControls) headerScrollControls.suspend();
+
+        // Wait a frame so anything else from this same click (e.g. the
+        // mobile menu's close-on-link-click, which runs its own listener
+        // first -- see paperMenu.bindEvents) has finished before we
+        // measure, rather than measuring mid-toggle.
+        requestAnimationFrame(() => {
+            scrollContainer.scrollTo({
+                top: targetOffsetTop(target),
+                behavior: smooth ? "smooth" : "auto"
+            });
+
+            if (!headerScrollControls) return;
+
+            const resume = () => headerScrollControls.resume();
+
+            if ("onscrollend" in scrollContainer) {
+                scrollContainer.addEventListener("scrollend", resume, { once: true });
+            } else {
+                // Fallback for browsers without scrollend support -- long
+                // enough to cover a smooth scroll across a full page.
+                setTimeout(resume, 800);
+            }
         });
     }
 
@@ -199,11 +268,44 @@ function initSmoothAnchors(scrollContainer) {
     });
 
     // Arrived here fresh with a hash already in the URL (e.g. followed
-    // "about.html#contact" from another page). Wait for full load so
-    // images have their real height before measuring offsetTop.
+    // "about.html#contact" from another page). Two things can still shift
+    // layout after the browser's own `load` event fires, both of which
+    // would make a position measured right at `load` stale:
+    //
+    //   1. Web fonts: `load` does not wait for @font-face swaps. Headings
+    //      here render in a fallback system font first, then swap to
+    //      'M PLUS Rounded 1c' (a different size) once it arrives -- which
+    //      changes the height of everything above #contact and pushes it
+    //      further down than where we already scrolled.
+    //   2. If `load` already fired before we got here (e.g. this listener
+    //      is registered after our own async header/footer fetches, which
+    //      can finish after a fast/cached `load`), a plain
+    //      `addEventListener("load", ...)` would never fire at all.
+    //
+    // document.readyState/fonts.ready cover both.
     if (window.location.hash) {
-        window.addEventListener("load", () => {
-            scrollToHash(window.location.hash, true);
+        const pageLoaded = new Promise((resolve) => {
+            if (document.readyState === "complete") {
+                resolve();
+            } else {
+                window.addEventListener("load", resolve, { once: true });
+            }
+        });
+
+        const fontsReady = document.fonts && document.fonts.ready
+            ? document.fonts.ready
+            : Promise.resolve();
+
+        Promise.all([pageLoaded, fontsReady]).then(() => {
+            // Guarantee a clean starting point: instantly at the top,
+            // then one smooth glide down to the target -- rather than
+            // whatever position a native fragment-jump or scroll
+            // restoration left us at.
+            scrollContainer.scrollTo({ top: 0, behavior: "auto" });
+
+            // One more frame so the fonts.ready-triggered reflow has
+            // actually been painted before we measure.
+            requestAnimationFrame(() => scrollToHash(window.location.hash, true));
         });
     }
 }
@@ -307,14 +409,14 @@ async function init() {
     const paperWindowEl = document.getElementById("paper-window");
 
     // Set up hide/show-on-scroll behavior now that the header exists
-    initHeaderScroll(paperWindowEl);
+    const headerScrollControls = initHeaderScroll(paperWindowEl);
 
     // Switch to the hamburger exactly when the desktop layout would collide
     initNavCollisionCheck();
 
     // Smoothly scroll to same-page hash links (e.g. the Contact nav link
     // now pointing at about.html#contact)
-    initSmoothAnchors(paperWindowEl);
+    initSmoothAnchors(paperWindowEl, headerScrollControls);
 
     // Set up the paper-tilt mobile menu
     paperMenu.init();
