@@ -12,7 +12,7 @@ const projects = [
         title: "WebGL Fluid Sound Simulator",
         category: "software",
         software: "Github Pages",
-        softwareIcon: "ri-ghost-line",
+        softwareIcon: "ri-github-fill",
         status: "IN DEVELOPMENT",
         description: "A website that turns audio input into watercolor graphics.",
         tags: ["Javascript", "CSS", "HTML", "Github Pages"],
@@ -21,17 +21,29 @@ const projects = [
         link: "https://paulnguyendesigns.github.io/WebGL-Fluid-Sound-Simulator/"
     },
     {
+        title: "Personal Portfolio",
+        category: "software",
+        software: "Github Pages",
+        softwareIcon: "ri-github-fill",
+        status: null,
+        description: "A dedicated personal portfolio website for my project updates and contact info.",
+        tags: ["HTML", "Javascript", "CSS", "Github Pages", "EmailJS"],
+        still: "./images-gifs/portfolio.png",
+        gif: "./images-gifs/portfolio.gif",
+        link: "https://github.com/paulnguyendesigns/portfolio"
+    },
+    {
         title: "Hue Day",
         category: "software",
         software: "React",
-        softwareIcon: "ri-gamepad-line",
+        softwareIcon: "ri-reactjs-line",
         status: null,
         description: "An interactive website that finds your seasonal color profile and shows your best colors.",
         tags: ["Python", "Javascript", "CSS", "HTML", "React", "Flask"],
         still: "./images-gifs/hue-day.png",
         gif: "./images-gifs/hue-day.gif",
         link: "https://devpost.com/software/hue-day"
-    },
+    }
 ];
 
 const COLUMNS = 3; // matches the grid-template-columns in css/portfolio.css

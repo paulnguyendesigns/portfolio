@@ -20,6 +20,17 @@
  
         }
  
+        /* ============================
+           Project cards
+           Wraps each project block so spacing lives in one place and
+           multiple cards can be added/updated consistently.
+           ============================ */
+        .project-card + .project-card {
+            margin-top: 40px;
+            padding-top: 50px;
+            border-top: 3px solid rgb(240, 196, 124);
+        }
+
         .eyebrow {
             display: flex;
             justify-content: center;
@@ -36,6 +47,13 @@
             background-color: rgb(255, 234, 217);
             padding: 6px 14px;
             border-radius: 100px;
+        }
+
+        /* Completed variant — swap .eyebrow's default (in-progress)
+           colors for green, same shape/layout */
+        .eyebrow.completed {
+            color: rgb(46, 138, 78);
+            background-color: rgb(222, 245, 227);
         }
  
         .pulse-dot {
@@ -58,6 +76,14 @@
         @keyframes pulse {
             0%   { transform: scale(1); opacity: 0.6; }
             100% { transform: scale(3); opacity: 0; }
+        }
+
+        /* Completed dot — solid green, no pulse animation */
+        .status-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background-color: rgb(46, 138, 78);
         }
  
         h1 {
@@ -174,27 +200,53 @@
     <h1 class="hidden">PROJECT UPDATES:</h1>
 
     <main>
-        <div class="hero-image">
-            <img class="hidden" src="./images-gifs/webgl_simulator.gif" alt="Live preview of the current project in progress">
-        </div>
-            <div class="eyebrow hidden"><span class="pulse-dot"></span>In Progress</div>
-        <div class="project-title hidden">WebGL Fluid Sound Simulator</div>
-        <p class="project-tagline hidden">This website turns audio input into watercolor fluid!</p>
-
-        <div class="updates-label hidden">Updates (July 11th, 2026)</div>
-        <ul class="updates-list hidden">
-            <li>Implemented Pavel Dobryakov's WebGL Fluid Simulator to take audio input instead of mouse input.</li>
-            <li>Currently working on the color and note frequencies to match synesthesia experiences.</li>
-            <li>Planning to improve the controller design and User Interface.</li>
-        </ul>
-
-        <a class="github-link hidden" href="https://github.com/paulnguyendesigns/WebGL-Fluid-Sound-Simulator" target="_blank" rel="noopener">
-            <div class="github-text">
-                <span class="github-title">WebGL Fluid Sound Simulator</span>
-                <span class="github-subtitle">https://github.com/paulnguyendesigns/WebGL-Fluid-Sound-Simulator</span>
+        <div class="project-card">
+            <div class="hero-image">
+                <img class="hidden" src="./images-gifs/portfolio.gif" alt="Live preview of the current project">
             </div>
-            <i class="ri-arrow-right-up-line"></i>
-        </a>
+            <div class="eyebrow completed hidden"><span class="status-dot"></span>Completed</div>
+            <div class="project-title hidden">Personal Portfolio</div>
+            <p class="project-tagline hidden">This is a dedicated personal portfolio website.</p>
+
+            <div class="updates-label hidden">Updates (July 17th, 2026)</div>
+            <ul class="updates-list hidden">
+                <li>Rebuilt the header, footer, and added designs for every HTML page.</li>
+                <li>Updating the pages to include additional interactive animations.</li>
+                <li>Improving collision detection to suit various screen and mobile layouts.</li>
+            </ul>
+
+            <a class="github-link hidden" href="https://github.com/paulnguyendesigns/portfolio" target="_blank" rel="noopener">
+                <div class="github-text">
+                    <span class="github-title">Personal Portfolio</span>
+                    <span class="github-subtitle">https://github.com/paulnguyendesigns/portfolio</span>
+                </div>
+                <i class="ri-arrow-right-up-line"></i>
+            </a>
+        </div>
+
+        <div class="project-card">
+            <div class="hero-image">
+                <img class="hidden" src="./images-gifs/webgl_simulator.gif" alt="Live preview of the completed project">
+            </div>
+            <div class="eyebrow hidden"><span class="pulse-dot"></span>In Progress</div>
+            <div class="project-title hidden">WebGL Fluid Sound Simulator</div>
+            <p class="project-tagline hidden">This website turns audio input into watercolor fluid!</p>
+
+            <div class="updates-label hidden">Updates (July 11th, 2026)</div>
+            <ul class="updates-list hidden">
+                <li>Implemented Pavel Dobryakov's WebGL Fluid Simulator to take audio input instead of mouse input.</li>
+                <li>Currently working on the color and note frequencies to match synesthesia experiences.</li>
+                <li>Planning to improve the controller design and User Interface.</li>
+            </ul>
+
+            <a class="github-link hidden" href="https://github.com/paulnguyendesigns/WebGL-Fluid-Sound-Simulator" target="_blank" rel="noopener">
+                <div class="github-text">
+                    <span class="github-title">WebGL Fluid Sound Simulator</span>
+                    <span class="github-subtitle">https://github.com/paulnguyendesigns/WebGL-Fluid-Sound-Simulator</span>
+                </div>
+                <i class="ri-arrow-right-up-line"></i>
+            </a>
+        </div>
     </main>
 
     <footer id="footer"></footer>
