@@ -160,7 +160,7 @@ function initSmoothAnchors(scrollContainer) {
     const header = document.getElementById("header");
     const headerHeight = header ? header.offsetHeight : 0;
 
-    const offset = 220;
+    const offset = 100;
 
     return Math.max(target.offsetTop - headerHeight + offset, 0);
     }
