@@ -166,12 +166,12 @@
         .contact-card {
             display: grid;
             grid-template-columns: 1.2fr 0.8fr;
-            gap: 60px;
+            gap: 70px;
             width: 100%;
-            max-width: 700px;
-            padding: 40px;
+            max-width: 980px;
+            padding: 50px;
             background-color: rgb(253, 246, 236);
-            border-radius: 28px;
+            border-radius: 32px;
             text-align: left;
             box-sizing: border-box;
         }
@@ -180,7 +180,7 @@
             display: flex;
             flex-direction: column;
             gap: 32px;
-            margin-bottom: -50px;
+            margin-bottom: -60px;
         }
 
         .form-field {
@@ -196,19 +196,26 @@
             color: rgb(157, 53, 33);
         }
 
-        .form-field input {
+        .form-field input,
+        .form-field textarea {
             border: none;
             border-bottom: 2px solid rgb(240, 196, 124);
             background: transparent;
             font-family: 'Lexend', sans-serif;
-            font-size: px;
+            font-size: 20px;
             color: rgb(157, 53, 33);
             padding: 6px 2px;
             outline: none;
             transition: border-color 0.2s ease;
         }
 
-        .form-field input:focus {
+        .form-field textarea {
+            resize: vertical;
+            line-height: 1.5;
+        }
+
+        .form-field input:focus,
+        .form-field textarea:focus {
             border-color: rgb(207, 103, 83);
         }
 
@@ -254,7 +261,8 @@
         .contact-info {
             display: flex;
             flex-direction: column;
-            margin-top: 20px;
+            margin-top: 60px;
+            gap: 30px;
         }
 
         .info-block {
@@ -311,7 +319,7 @@
             align-items: center;
             justify-content: center;
             gap: 45px;
-            margin-top: 15px;
+            margin-top: -10px;
         }
 
         .social-row a {
@@ -394,7 +402,7 @@
                     </div>
                     <div class="form-field">
                         <label for="message">Message</label>
-                        <input type="text" id="message" name="message" required>
+                        <textarea id="message" name="message" rows="2" required></textarea>
                     </div>
 
                     <!-- Honeypot: invisible to real people, but bots that fill in
