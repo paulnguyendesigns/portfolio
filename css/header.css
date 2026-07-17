@@ -20,7 +20,7 @@ body {
     --header-pad-x: 50px;
     --logo-height: 140px;
     --nav-gap: 60px;
-    --icon-size: 40px;
+    --icon-size: 45px;
     --transition-speed: 0.3s;
     --mobile-breakpoint: 900px;
     --z-header: 1000;
@@ -282,9 +282,9 @@ body {
 .hamburger span::before,
 .hamburger span::after {
     display: block;
-    width: 45px;
-    height: 6px;
-    background-color: var(--header-text);
+    width: 40px;
+    height: 5px;
+    background-color: var(--header-text-muted);
     border-radius: 2px;
 }
 
