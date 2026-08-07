@@ -18,7 +18,7 @@ const projects = [
         tags: ["Javascript", "CSS", "HTML", "Github Pages"],
         still: "./images-gifs/webgl_simulator.png",
         gif: "./images-gifs/webgl_simulator.gif",
-        link: "https://paulnguyendesigns.github.io/WebGL-Fluid-Sound-Simulator/"
+        link: "https://paulng12.github.io/WebGL-Fluid-Sound-Simulator/"
     },
     {
         title: "Personal Portfolio",
@@ -30,7 +30,7 @@ const projects = [
         tags: ["HTML", "Javascript", "CSS", "Github Pages", "EmailJS"],
         still: "./images-gifs/portfolio.png",
         gif: "./images-gifs/portfolio.gif",
-        link: "https://github.com/paulnguyendesigns/portfolio"
+        link: "https://github.com/paulng12/portfolio"
     },
     {
         title: "Hue Day",
