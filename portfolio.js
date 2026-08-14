@@ -43,6 +43,18 @@ const projects = [
         still: "./images-gifs/hue-day.png",
         gif: "./images-gifs/hue-day.gif",
         link: "https://devpost.com/software/hue-day"
+    },
+    {
+        title: "Snake",
+        category: "games",
+        software: "Unity",
+        softwareIcon: "ri-unity-fill",
+        status: null,
+        description: "A classic Snake game implemented in Unity.",
+        tags: ["C#", "Unity"],
+        still: "./images-gifs/snake.png",
+        gif: "./images-gifs/snake.gif",
+        link: "https://devpost.com/software/snake"
     }
 ];
 
