@@ -45,10 +45,22 @@ const projects = [
         link: "https://devpost.com/software/hue-day"
     },
     {
+        title: "ReCastle",
+        category: "games",
+        software: "Godot",
+        softwareIcon: "devicon-godot-plain",
+        status: "IN DEVELOPMENT",
+        description: "A 2D platformer game built with Godot.",
+        tags: ["C#", "Godot"],
+        still: "./images-gifs/recastle.png",
+        gif: "./images-gifs/recastle.gif",
+        link: "https://devpost.com/software/recastle"
+    },
+    {
         title: "Snake",
         category: "games",
         software: "Unity",
-        softwareIcon: "ri-unity-fill",
+        softwareIcon: "devicon-unity-plain",
         status: null,
         description: "A classic Snake game implemented in Unity.",
         tags: ["C#", "Unity"],
